@@ -1,32 +1,76 @@
 const dotenv = require("dotenv");
 dotenv.config();
-// Force public DNS to resolve MongoDB Atlas SRV records correctly
-require('node:dns').setServers(['1.1.1.1', '8.8.8.8']);
+
+// Fix MongoDB Atlas DNS issue
+require("node:dns").setServers(["1.1.1.1", "8.8.8.8"]);
 
 const express = require("express");
 const cors = require("cors");
 
 const connectDB = require("./config/db");
-const authRoutes = require("./routes/authRoutes");
 
+// Routes
+const authRoutes = require("./routes/authRoutes");
+const organizationRoutes = require("./routes/organizationRoutes");
+const userRoutes = require("./routes/userRoutes");
+const memberRoutes = require("./routes/memberRoutes");
 const app = express();
 
+// ============================
+// Connect Database
+// ============================
 connectDB();
 
+// ============================
+// Middlewares
+// ============================
 app.use(cors());
+
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+app.use(express.urlencoded({ extended: true }));
+app.use("/api/members", memberRoutes);
 
-app.get("/api/test", (req, res) => {
-    res.json({
-        success: true,
-        message: "Backend Connected Successfully"
-    });
+
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "TeamSync Backend Running 🚀",
+  });
 });
 
+// Test Route
+app.get("/api/test", (req, res) => {
+  res.json({
+    success: true,
+    message: "Backend Connected Successfully",
+  });
+});
+
+// ============================
+// API Routes
+// ============================
+app.use("/api/auth", authRoutes);
+
+app.use("/api/organizations", organizationRoutes);
+
+app.use("/api/users", userRoutes);
+
+// ============================
+// 404 Route
+// ============================
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route Not Found",
+  });
+});
+
+// ============================
+// Start Server
+// ============================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });

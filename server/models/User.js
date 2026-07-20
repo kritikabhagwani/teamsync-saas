@@ -24,8 +24,35 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["member", "manager", "admin"],
+      enum: ["owner", "admin", "member"],
       default: "member",
+    },
+
+    avatar: {
+      type: String,
+      default: "",
+    },
+
+    organization: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      default: null,
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    lastLogin: {
+      type: Date,
+      default: null,
+    },
+
+    bio: {
+      type: String,
+      default: "",
+      maxlength: 300,
     },
   },
   {
@@ -33,6 +60,4 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);
