@@ -39,6 +39,7 @@ const protect = async (req, res, next) => {
 
     // Attach user to request
     req.user = user;
+     console.log("Logged-in user:", req.user);
 
     next();
 

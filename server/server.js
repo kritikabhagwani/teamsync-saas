@@ -14,6 +14,12 @@ const authRoutes = require("./routes/authRoutes");
 const organizationRoutes = require("./routes/organizationRoutes");
 const userRoutes = require("./routes/userRoutes");
 const memberRoutes = require("./routes/memberRoutes");
+const projectRoutes = require("./routes/projectRoutes");
+const taskRoutes=require("./routes/taskRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const activityRoutes = require("./routes/activityRoutes");
+
+
 const app = express();
 
 // ============================
@@ -30,7 +36,10 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/members", memberRoutes);
-
+app.use("/api/projects", projectRoutes);
+app.use("/api/tasks",taskRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/activity", activityRoutes);
 
 app.get("/", (req, res) => {
   res.json({
