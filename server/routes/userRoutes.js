@@ -1,6 +1,8 @@
 const express = require("express");
 
 const { protect } = require("../middleware/authMiddleware");
+const upload=require("../middleware/upload");
+const { uploadProfileImage } = require("../controllers/userController");
 
 const router = express.Router();
 
@@ -11,5 +13,13 @@ router.get("/profile", protect, (req, res) => {
     user: req.user,
   });
 });
+
+router.post(
+"/profile-image",
+protect,
+upload.single("image"),
+uploadProfileImage
+);
+
 
 module.exports = router;

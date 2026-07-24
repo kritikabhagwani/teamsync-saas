@@ -12,8 +12,16 @@ const {
 } = require("../controllers/projectController");
 
 const { protect, authorize } = require("../middleware/authMiddleware");
+const { projectValidation } = require("../middleware/validation");
 
 router.use(protect);
+
+router.post(
+    "/",
+    projectValidation,
+    authorize("owner", "admin"),
+    createProject
+);
 
 router
   .route("/")

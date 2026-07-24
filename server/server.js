@@ -18,7 +18,7 @@ const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes=require("./routes/taskRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const activityRoutes = require("./routes/activityRoutes");
-
+const errorHandler = require("./middleware/errorMiddleware");
 
 const app = express();
 
@@ -64,7 +64,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/organizations", organizationRoutes);
 
 app.use("/api/users", userRoutes);
-
+app.use(errorHandler);
 // ============================
 // 404 Route
 // ============================
@@ -83,3 +83,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+

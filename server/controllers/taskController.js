@@ -261,3 +261,49 @@ task
 
 
 };
+
+exports.uploadAttachment = async(req,res)=>{
+
+
+const task=await Task.findById(req.params.id);
+
+
+
+const result=
+await cloudinary.uploader.upload(
+
+`data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
+
+{
+folder:"teamsync/tasks"
+}
+
+);
+
+
+
+task.attachments.push({
+
+name:req.file.originalname,
+
+url:result.secure_url,
+
+uploadedBy:req.user._id
+
+});
+
+
+await task.save();
+
+
+
+res.json({
+
+success:true,
+
+task
+
+});
+
+
+};

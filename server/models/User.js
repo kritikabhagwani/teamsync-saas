@@ -28,10 +28,10 @@ const userSchema = new mongoose.Schema(
       default: "member",
     },
 
-    avatar: {
-      type: String,
-      default: "",
-    },
+    profileImage:{
+type:String,
+default:""
+},
 
     organization: {
       type: mongoose.Schema.Types.ObjectId,

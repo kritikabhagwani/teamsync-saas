@@ -77,8 +77,29 @@ const taskSchema = new mongoose.Schema({
                 default:Date.now
             }
         }
-    ]
+    ],
+    
+ attachments:[
 
+{
+
+name:String,
+
+url:String,
+
+uploadedBy:{
+type:mongoose.Schema.Types.ObjectId,
+ref:"User"
+},
+
+uploadedAt:{
+type:Date,
+default:Date.now
+}
+
+}
+
+]
 
 },
 {

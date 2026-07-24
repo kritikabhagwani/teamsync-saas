@@ -9,7 +9,8 @@ getTasks,
 getTaskById,
 updateTask,
 deleteTask,
-addComment
+addComment,
+uploadAttachment
 
 }=require("../controllers/taskController");
 
@@ -18,7 +19,7 @@ const {protect}=require("../middleware/authMiddleware");
 
 
 router.use(protect);
-
+const upload=require("../middleware/upload");
 
 
 router.post("/",createTask);
@@ -37,6 +38,13 @@ router.delete("/:id",deleteTask);
 
 
 router.post("/:id/comment",addComment);
+
+router.post(
+"/:id/attachment",
+protect,
+upload.single("file"),
+uploadAttachment
+);
 
 
 
