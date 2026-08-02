@@ -1,6 +1,8 @@
 const Project = require("../models/Project");
 const Organization = require("../models/Organization");
 const logActivity=require("../utils/logActivity");
+const APIFeatures = require("../utils/apiFeatures");
+
 
 exports.createProject = async (req, res) => {
   try {
@@ -67,14 +69,43 @@ exports.createProject = async (req, res) => {
 
 exports.getProjects = async (req, res) => {
   try {
-    const projects = await Project.find({
-  organization: req.user.organization,
-})
-      .populate("createdBy", "name email")
-      .populate("members", "name email");
+    const features = new APIFeatures(
+      Project.find({
+        organization: req.user.organization,
+      })
+        .populate("createdBy", "name email")
+        .populate("members", "name email"),
+      req.query
+    )
+      .search("name")
+      .sort()
+      .paginate();
 
-    res.json({
+    const projects = await features.query;
+
+    // Count matching projects
+    const countFilter = {
+      organization: req.user.organization,
+    };
+
+    if (req.query.search) {
+      countFilter.name = {
+        $regex: req.query.search,
+        $options: "i",
+      };
+    }
+
+    const totalProjects = await Project.countDocuments(countFilter);
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    res.status(200).json({
       success: true,
+      page,
+      limit,
+      totalProjects,
+      totalPages: Math.ceil(totalProjects / limit),
       count: projects.length,
       projects,
     });

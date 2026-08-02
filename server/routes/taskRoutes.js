@@ -26,7 +26,7 @@ router.post("/",createTask);
 
 
 router.get("/project/:projectId",getTasks);
-
+router.get("/", protect, getTasks);
 
 router.get("/:id",getTaskById);
 
