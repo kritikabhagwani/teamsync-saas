@@ -22,6 +22,8 @@ const activityRoutes = require("./routes/activityRoutes");
 const errorHandler = require("./middleware/errorMiddleware");
 const limiter = require("./middleware/rateLimiter");
 const helmet = require("helmet");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 
 
 
@@ -44,7 +46,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/members", memberRoutes);
 app.use("/api/projects", projectRoutes);
@@ -53,6 +54,8 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/activity", activityRoutes);
 app.use(limiter);
 app.use(helmet());
+console.log("Swagger route loaded");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/", (req, res) => {
   res.json({
@@ -68,6 +71,7 @@ app.get("/api/test", (req, res) => {
     message: "Backend Connected Successfully",
   });
 });
+
 
 // ============================
 // API Routes
